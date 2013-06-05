@@ -1,0 +1,30 @@
+#!/usr/bin/ruby 
+
+if ARGV.length != 2
+  abort "Usage: completerator foo verb_list.txt"
+end
+
+command_name = ARGV[0]
+
+verbs_file = File.open(ARGV[1], "rb")
+verb_list = ""
+verbs_file.each { |line| verb_list << "#{line.chop} " }
+
+verbs_file.close_read
+
+output = <<eos
+_#{command_name}()
+{
+  local cur prev opts
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  # prev="${COMP_WORDS[COMP_CWORD-1]}"
+  opts="#{verb_list.strip}"
+
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+complete -F _#{command_name} #{command_name}
+eos
+
+puts output
+

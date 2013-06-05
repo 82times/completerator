@@ -1,0 +1,6 @@
+bar
+baz
+bat
+-help
+--version
+
